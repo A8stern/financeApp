@@ -1,8 +1,8 @@
 //
 //  ContentView.swift
-//  Yandex_SMD_Summer_2025
+//  Yandex_SMD_2025
 //
-//  Created by Kovalev Gleb on 14.06.2025.
+//  Created by Kovalev Gleb on 13.06.2025.
 //
 
 import SwiftUI

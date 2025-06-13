@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		DD4F44712DFCEAFE004A7F6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD4F44252DFCE7B3004A7F6D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD4F442C2DFCE7B3004A7F6D;
+			remoteInfo = Yandex_SMD_Summer_2025;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		DD4F442D2DFCE7B3004A7F6D /* Yandex_SMD_Summer_2025.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yandex_SMD_Summer_2025.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD4F446D2DFCEAFE004A7F6D /* Yandex_SMD_2025Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Yandex_SMD_2025Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +27,22 @@
 			path = Yandex_SMD_Summer_2025;
 			sourceTree = "<group>";
 		};
+		DD4F446E2DFCEAFE004A7F6D /* Yandex_SMD_2025Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Yandex_SMD_2025Tests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		DD4F442A2DFCE7B3004A7F6D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD4F446A2DFCEAFE004A7F6D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				DD4F442F2DFCE7B3004A7F6D /* Yandex_SMD_Summer_2025 */,
+				DD4F446E2DFCEAFE004A7F6D /* Yandex_SMD_2025Tests */,
 				DD4F442E2DFCE7B3004A7F6D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				DD4F442D2DFCE7B3004A7F6D /* Yandex_SMD_Summer_2025.app */,
+				DD4F446D2DFCEAFE004A7F6D /* Yandex_SMD_2025Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +95,29 @@
 			productReference = DD4F442D2DFCE7B3004A7F6D /* Yandex_SMD_Summer_2025.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DD4F446C2DFCEAFE004A7F6D /* Yandex_SMD_2025Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD4F44732DFCEAFE004A7F6D /* Build configuration list for PBXNativeTarget "Yandex_SMD_2025Tests" */;
+			buildPhases = (
+				DD4F44692DFCEAFE004A7F6D /* Sources */,
+				DD4F446A2DFCEAFE004A7F6D /* Frameworks */,
+				DD4F446B2DFCEAFE004A7F6D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD4F44722DFCEAFE004A7F6D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DD4F446E2DFCEAFE004A7F6D /* Yandex_SMD_2025Tests */,
+			);
+			name = Yandex_SMD_2025Tests;
+			packageProductDependencies = (
+			);
+			productName = Yandex_SMD_2025Tests;
+			productReference = DD4F446D2DFCEAFE004A7F6D /* Yandex_SMD_2025Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -82,6 +130,11 @@
 				TargetAttributes = {
 					DD4F442C2DFCE7B3004A7F6D = {
 						CreatedOnToolsVersion = 16.1;
+					};
+					DD4F446C2DFCEAFE004A7F6D = {
+						CreatedOnToolsVersion = 16.1;
+						LastSwiftMigration = 1610;
+						TestTargetID = DD4F442C2DFCE7B3004A7F6D;
 					};
 				};
 			};
@@ -100,12 +153,20 @@
 			projectRoot = "";
 			targets = (
 				DD4F442C2DFCE7B3004A7F6D /* Yandex_SMD_Summer_2025 */,
+				DD4F446C2DFCEAFE004A7F6D /* Yandex_SMD_2025Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		DD4F442B2DFCE7B3004A7F6D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD4F446B2DFCEAFE004A7F6D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +183,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DD4F44692DFCEAFE004A7F6D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DD4F44722DFCEAFE004A7F6D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD4F442C2DFCE7B3004A7F6D /* Yandex_SMD_Summer_2025 */;
+			targetProxy = DD4F44712DFCEAFE004A7F6D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		DD4F44392DFCE7B4004A7F6D /* Debug */ = {
@@ -302,6 +378,45 @@
 			};
 			name = Release;
 		};
+		DD4F44742DFCEAFE004A7F6D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J2F6X98HJC;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "a8stern.Yandex-SMD-2025Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Yandex_SMD_Summer_2025.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Yandex_SMD_Summer_2025";
+			};
+			name = Debug;
+		};
+		DD4F44752DFCEAFE004A7F6D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = J2F6X98HJC;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "a8stern.Yandex-SMD-2025Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Yandex_SMD_Summer_2025.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Yandex_SMD_Summer_2025";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -319,6 +434,15 @@
 			buildConfigurations = (
 				DD4F443C2DFCE7B4004A7F6D /* Debug */,
 				DD4F443D2DFCE7B4004A7F6D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD4F44732DFCEAFE004A7F6D /* Build configuration list for PBXNativeTarget "Yandex_SMD_2025Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD4F44742DFCEAFE004A7F6D /* Debug */,
+				DD4F44752DFCEAFE004A7F6D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
