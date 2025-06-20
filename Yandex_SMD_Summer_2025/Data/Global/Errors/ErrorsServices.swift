@@ -15,3 +15,7 @@ enum TransactionServiceError: Error {
 enum BankAccountsServiceError: Error {
     case accountNotFound
 }
+
+enum CategoryServiceError: Error {
+    case categoryNotFound
+}

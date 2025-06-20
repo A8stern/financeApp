@@ -5,7 +5,7 @@
 //  Created by Kovalev Gleb on 13.06.2025.
 //
 
-final class CategoriesService {
+actor CategoriesService {
     
     private let mockCategories: [Category] = [
         Category(id: 1, name: "Зарплата", emoji: "💰", isIncome: true),
@@ -16,11 +16,18 @@ final class CategoriesService {
         Category(id: 6, name: "Развлечения", emoji: "🎮", isIncome: false)
     ]
     
-    func categories() async throws -> [Category] {
+    func categories() throws -> [Category] {
         return mockCategories
     }
     
-    func categories(direction: Direction) async throws -> [Category] {
+    func categories(direction: Direction) throws -> [Category] {
         return mockCategories.filter { $0.isIncome == direction }
+    }
+    
+    func getCategoryById(_ id: Int) throws -> Category {
+        guard let category = mockCategories.first(where: { $0.id == id }) else {
+            throw CategoryServiceError.categoryNotFound
+        }
+        return category
     }
 }

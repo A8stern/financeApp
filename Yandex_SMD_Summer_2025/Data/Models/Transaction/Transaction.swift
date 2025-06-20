@@ -7,20 +7,20 @@
 
 import Foundation
 
-struct Transaction {
+struct Transaction: Identifiable {
     let id: Int
-    let accountId: Int
-    let categoryId: Int
+    let account: BankAccount
+    let category: Category
     let amount: Decimal
     let transactionDate: Date
     let comment: String?
     let createdAt: Date
     let updatedAt: Date
     
-    init (id: Int, accountId: Int, categoryId: Int, amount: Decimal, transactionDate: Date, comment: String?, createdAt: Date, updatedAt: Date) {
+    init (id: Int, account: BankAccount, category: Category, amount: Decimal, transactionDate: Date, comment: String?, createdAt: Date, updatedAt: Date) {
         self.id = id
-        self.accountId = accountId
-        self.categoryId = categoryId
+        self.account = account
+        self.category = category
         self.amount = amount
         self.transactionDate = transactionDate
         self.comment = comment
@@ -28,10 +28,10 @@ struct Transaction {
         self.updatedAt = updatedAt
     }
     
-    init(id: Int, accountId: Int, categoryId: Int, amount: String, transactionDate: String, comment: String?, createdAt: String, updatedAt: String) throws {
+    init(id: Int, account: BankAccount, category: Category, amount: String, transactionDate: String, comment: String?, createdAt: String, updatedAt: String) throws {
         self.id = id
-        self.accountId = accountId
-        self.categoryId = categoryId
+        self.account = account
+        self.category = category
         guard let amountOfTransaction = Decimal(string: amount) else {
             throw TransactionErrors.invalidBalanceFormat
         }
