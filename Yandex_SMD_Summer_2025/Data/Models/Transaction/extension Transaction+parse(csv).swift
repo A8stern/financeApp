@@ -61,8 +61,8 @@ extension Transaction {
             
             let tx = try Transaction(
                 id: id,
-                accountId: accountId,
-                categoryId: categoryId,
+                account: BankAccount(id: accountId, userId: 1, name: "Vova", balance: "1000", currency: "RUB", createdAt: createdAtStr, updatedAt: updatedAtStr),
+                category: Category(id: categoryId, name: "Зарплата", emoji: "😁", isIncome: true),
                 amount: amountStr,
                 transactionDate: dateStr,
                 comment: comment,

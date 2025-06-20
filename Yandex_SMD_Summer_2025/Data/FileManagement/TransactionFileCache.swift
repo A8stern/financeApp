@@ -22,7 +22,7 @@ final class TransactionsFileCache {
     func save(to filename: String) async throws {
         let url = try getFileURL(filename: filename)
         
-        let jsonObjects = transactions.map { $0.jsonObject }
+        let jsonObjects = try transactions.map { try $0.jsonObject }
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObjects, options: [.prettyPrinted])
         
         try await Task.detached {
