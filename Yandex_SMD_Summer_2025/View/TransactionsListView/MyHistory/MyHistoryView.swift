@@ -14,6 +14,10 @@ struct MyHistoryView: View {
     
     @EnvironmentObject var router: TransactionListRouter
     
+    private enum MyHistoryMetrics {
+        static let circleForIconRadius: CGFloat = 22
+    }
+    
     init(direction: Direction) {
         self.viewModel = MyHistoryViewModel(direction: direction)
     }
@@ -87,7 +91,7 @@ struct MyHistoryView: View {
         }
     }
     
-    var sortOptions: some View {
+    var sumForPeriod: some View {
         HStack {
             Text("Сумма")
             
@@ -97,7 +101,7 @@ struct MyHistoryView: View {
         }
     }
     
-    var sumForPeriod: some View {
+    var sortOptions: some View {
         HStack {
             Text("Отсортировано по")
             
@@ -112,7 +116,7 @@ struct MyHistoryView: View {
             .colorMultiply(Color("LightGreen"))
             .fixedSize()
             .onChange(of: viewModel.sortOption) { oldValue, newValue in
-                viewModel.sortTransactions()
+                viewModel.sortTransactions(viewModel.transactions)
             }
         }
     }
@@ -123,7 +127,7 @@ struct MyHistoryView: View {
                 HStack {
                     ZStack {
                         Circle()
-                            .frame(width: 22)
+                            .frame(width: MyHistoryMetrics.circleForIconRadius)
                             .foregroundStyle(Color("LightGreen"))
                         
                         Text("\(transaction.category.emoji)")
@@ -147,9 +151,6 @@ struct MyHistoryView: View {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 13))
                         .foregroundStyle(.tertiary)
-                }
-                .task {
-                    
                 }
             }
         }
