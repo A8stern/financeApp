@@ -14,6 +14,13 @@ struct TransactionsListView: View {
     
     @EnvironmentObject var router: TransactionListRouter
     
+    private enum TransactionListMetrics {
+        static let circleForIconRadius: CGFloat = 22
+        static let addButtonFrameWidth: CGFloat = 56
+        static let addButtonHorizontalPadding: CGFloat = 16
+        static let addButtonVerticalPadding: CGFloat  = 27
+    }
+    
     init(direction: Direction) {
         self.viewModel = TransactionsListViewModel(direction: direction)
     }
@@ -59,7 +66,7 @@ struct TransactionsListView: View {
                 HStack {
                     ZStack {
                         Circle()
-                            .frame(width: 22)
+                            .frame(width: TransactionListMetrics.circleForIconRadius)
                             .foregroundStyle(Color("LightGreen"))
                         
                         Text("\(transaction.category.emoji)")
@@ -97,9 +104,9 @@ struct TransactionsListView: View {
             HStack {
                 Spacer()
                 Circle()
-                    .frame(width: 56)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 27)
+                    .frame(width: TransactionListMetrics.addButtonFrameWidth)
+                    .padding(.horizontal, TransactionListMetrics.addButtonHorizontalPadding)
+                    .padding(.vertical, TransactionListMetrics.addButtonVerticalPadding)
                     .foregroundStyle(Color("AccentColor"))
                     .overlay {
                         Image(systemName: "plus")

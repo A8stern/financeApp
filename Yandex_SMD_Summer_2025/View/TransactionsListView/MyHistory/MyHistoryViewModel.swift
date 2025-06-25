@@ -21,6 +21,7 @@ final class MyHistoryViewModel {
     
     var transactions: [Transaction] = []
     var sortOption: SortOption = .date
+    var showTransactionSection: Bool = false
     
     var sumOfTransactions: Decimal = 0
     
@@ -37,26 +38,28 @@ final class MyHistoryViewModel {
     
     func fetchTransactions() async {
         do {
-            transactions = try await service.getTransactionsInDirection(from: startOfPeriod, to: endOfPeriod, inDirection: direction)
-            sumOfTransactions = countSumOfTransactions()
-            sortTransactions()
+            let newTransactions = try await service.getTransactionsInDirection(from: startOfPeriod, to: endOfPeriod, inDirection: direction)
+            sumOfTransactions = countSumOfTransactions(newTransactions)
+            sortTransactions(newTransactions)
         } catch {
             fatalError("Error: \(error)") // fatal error сделан специально, чтобы отлавить ошибки на этапе разработке, в прод она не пойдет
         }
     }
     
-    private func countSumOfTransactions() -> Decimal {
-        return transactions.reduce(0) { result, transaction in
-            result + transaction.amount
+    private func countSumOfTransactions(_ transaction: [Transaction]) -> Decimal {
+        return transaction.reduce(0) { result, transactions in
+            result + transactions.amount
         }
     }
     
-    func sortTransactions() {
-        switch sortOption {
-        case .date:
-            transactions = transactions.sorted { $0.transactionDate < $1.transactionDate }
-        case .amount:
-            transactions = transactions.sorted { $0.amount < $1.amount }
+    func sortTransactions(_ transaction: [Transaction]) {
+        withAnimation {
+            switch sortOption {
+            case .date:
+                transactions = transaction.sorted { $0.transactionDate < $1.transactionDate }
+            case .amount:
+                transactions = transaction.sorted { $0.amount < $1.amount }
+            }
         }
     }
 }
