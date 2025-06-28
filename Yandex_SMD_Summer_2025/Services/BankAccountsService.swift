@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class BankAccountsService {
+actor BankAccountsService {
     
     private var storedAccount: BankAccount?
     
@@ -27,14 +27,14 @@ final class BankAccountsService {
         }
     }
     
-    func getAccount() async throws -> BankAccount {
+    func getAccount() throws -> BankAccount {
         guard let storedAccount else {
             throw BankAccountsServiceError.accountNotFound
         }
         return storedAccount
     }
     
-    func updateAccount(to updated: BankAccount) async throws {
+    func updateAccount(to updated: BankAccount) throws {
         self.storedAccount = updated
     }
 }

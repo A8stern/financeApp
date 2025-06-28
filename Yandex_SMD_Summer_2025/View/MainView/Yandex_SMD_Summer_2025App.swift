@@ -12,6 +12,7 @@ struct Yandex_SMD_Summer_2025App: App {
     var body: some Scene {
         WindowGroup {
             AppTabView()
+                .environment(\.colorScheme, .light)
         }
     }
 }
