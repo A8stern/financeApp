@@ -16,12 +16,8 @@ actor CategoriesService {
         Category(id: 6, name: "Развлечения", emoji: "🎮", isIncome: false)
     ]
     
-    func categories() throws -> [Category] {
+    func getCategories() throws -> [Category] {
         return mockCategories
-    }
-    
-    func categories(direction: Direction) throws -> [Category] {
-        return mockCategories.filter { $0.isIncome == direction }
     }
     
     func getCategoryById(_ id: Int) throws -> Category {
