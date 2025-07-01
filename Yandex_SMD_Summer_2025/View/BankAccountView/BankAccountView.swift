@@ -22,6 +22,9 @@ struct BankAccountView: View {
             .refreshable {
                 viewModel.refreshValues()
             }
+            .onShake {
+                viewModel.deviceShaken()
+            }
             .scrollDismissesKeyboard(.immediately)
             .confirmationDialog("Валюта", isPresented: $viewModel.showCurrencyPicker, titleVisibility: .visible) {
                 ForEach(CurrencyInApp.allCases) { currency in
@@ -57,27 +60,35 @@ struct BankAccountView: View {
                 Spacer()
                 
                 if viewModel.balanceText != "000" {
-                    TextField(text: $viewModel.balanceText) {
-                        Text(viewModel.balanceText)
-                    }
-                    .spoiler(isOn: $viewModel.isBalanceHidden)
-                    .onShake {
-                        viewModel.deviceShaken()
-                    }
-                    .contextMenu {
-                        if viewModel.isEditing {
-                            Button("Вставить из буфера") {
-                                viewModel.pasteTextFromClipboard()
+                    ZStack {
+                        if !viewModel.isBalanceHidden {
+                            TextField(text: $viewModel.balanceText) {
+                                Text(viewModel.balanceText)
                             }
+                            .contextMenu {
+                                if viewModel.isEditing {
+                                    Button("Вставить из буфера") {
+                                        viewModel.pasteTextFromClipboard()
+                                    }
+                                }
+                            }
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .disabled(!viewModel.isEditing || viewModel.isBalanceHidden)
+                        }
+                        
+                        if viewModel.isBalanceHidden {
+                            SpoilerView(isOn: viewModel.isBalanceHidden)
+                                .padding(.vertical, 11)
+                                .opacity(viewModel.isBalanceHidden ? 1 : 0)
+                                .animation(.default, value: viewModel.isBalanceHidden)
                         }
                     }
-                    .keyboardType(.numberPad)
-                    .multilineTextAlignment(.trailing)
-                    .disabled(!viewModel.isEditing || viewModel.isBalanceHidden)
                 } else {
                     ProgressView()
                 }
             }
+            
             .listRowBackground(viewModel.isEditing ? .white : Color.accent)
         }
     }
