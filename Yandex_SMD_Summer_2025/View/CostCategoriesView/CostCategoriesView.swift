@@ -44,9 +44,6 @@ struct CostCategoriesView: View {
                 Text(option.rawValue).tag(option)
             }
         }
-        .onChange(of: viewModel.direction, { oldValue, newValue in
-            viewModel.filterCategories()
-        })
         .padding(.horizontal, CostCategoriesMetrics.paddingHorizontalForPicker)
         .pickerStyle(.segmented)
     }

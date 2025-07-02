@@ -15,13 +15,15 @@ final class CostCategoriesViewModel {
     var direction: Direction = .outcome
 
     private var allCategories: [Category] = []
-    var categories: [Category] = []
+    private var filteredCategories: [Category] {
+        return allCategories.filter { $0.isIncome == direction }
+    }
     
     var sortedCategories: [Category] {
         if searchText.isEmpty {
-            return categories
+            return filteredCategories
         } else {
-            return categories.fuzzySearch(query: searchText).map {
+            return filteredCategories.fuzzySearch(query: searchText).map {
                 $0.item
             }
         }
@@ -29,10 +31,5 @@ final class CostCategoriesViewModel {
 
     func loadCategories() async throws {
         allCategories = try await service.getCategories()
-        filterCategories()
-    }
-
-    func filterCategories() {
-        categories = allCategories.filter { $0.isIncome == direction }
     }
 }
