@@ -7,16 +7,22 @@
 
 import Foundation
 
-enum Direction {
-    case income
-    case outcome
+enum Direction: String, CaseIterable, Identifiable {
+    case outcome = "Расходы"
+    case income = "Доходы"
+    
+    var id: Self { self }
 }
 
-struct Category {
+struct Category: Identifiable, FuzzySearchable {
     let id: Int
     let name: String
     let emoji: Character
     let isIncome: Direction
+    
+    var searchableString: String {
+        return name
+    }
     
     init(id: Int, name: String, emoji: Character, isIncome: Bool) {
         self.id = id
