@@ -31,7 +31,11 @@ struct MyHistoryView: View {
         .navigationTitle("Моя история")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Image(systemName: "document")
+                Button {
+                    router.navigateTo(.analyze(viewModel.direction))
+                } label: {
+                    Image(systemName: "document")
+                }
             }
         }
     }

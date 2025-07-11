@@ -76,7 +76,6 @@ actor TransactionsService {
     }
     
     func getTransactionsInDirection(from startDate: Date, to endDate: Date, inDirection direction: Direction) async throws -> [Transaction] {
-        try? await Task.sleep(for: .seconds(1))
         return transactions.filter {
             $0.transactionDate >= startDate && $0.transactionDate <= endDate && $0.category.isIncome == direction
         }
