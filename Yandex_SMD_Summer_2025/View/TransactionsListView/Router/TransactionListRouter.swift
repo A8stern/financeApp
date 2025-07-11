@@ -12,6 +12,7 @@ class TransactionListRouter: ObservableObject {
     enum Route: Hashable {
         case myHistory(Direction)
         case transactionList(Direction)
+        case analyze(Direction)
     }
     
     @Published var path: NavigationPath = NavigationPath()
@@ -22,6 +23,8 @@ class TransactionListRouter: ObservableObject {
             MyHistoryView(direction: direction)
         case .transactionList(let direction):
             TransactionsListView(direction: direction)
+        case .analyze(let direction):
+            AnalyzeView(direction: direction)
         }
     }
     
