@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct AnalyzeView: View {
-    
     let direction: Direction
-    
+
     @EnvironmentObject var router: TransactionListRouter
-    
+
+    @State private var chosenTransaction: Transaction?
+
     var body: some View {
-        AnalyzeViewControllerRepresentable(direction: direction)
-            .background(Color(.systemGroupedBackground))
+        AnalyzeViewControllerRepresentable(
+            chosenTransaction: $chosenTransaction,
+            direction: direction
+        )
+        .background(Color(.systemGroupedBackground))
+        .fullScreenCover(item: $chosenTransaction) { tx in
+            EditCreateView(
+                direction: direction,
+                mode: .edit,
+                transaction: tx
+            )
+        }
     }
 }
 

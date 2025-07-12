@@ -10,6 +10,8 @@ import UIKit
 class AnalyzeViewController: UIViewController {
 
     private let tableViewController: AnalyzeTableViewController
+    
+    var onTransactionSelect: ((Transaction) -> Void)?
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -24,6 +26,9 @@ class AnalyzeViewController: UIViewController {
     init(direction: Direction) {
         self.tableViewController = AnalyzeTableViewController(direction: direction)
         super.init(nibName: nil, bundle: nil)
+        tableViewController.onTransactionSelect = { [weak self] tx in
+            self?.onTransactionSelect?(tx)
+        }
     }
 
     required init?(coder: NSCoder) {

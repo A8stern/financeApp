@@ -11,6 +11,8 @@ class AnalyzeTableViewController: UITableViewController {
     
     var viewModel: AnalyzeViewModel
     
+    var onTransactionSelect: ((Transaction) -> Void)?
+    
     init(direction: Direction) {
         self.viewModel = AnalyzeViewModel(direction: direction)
         super.init(nibName: nil, bundle: nil)
@@ -105,8 +107,6 @@ class AnalyzeTableViewController: UITableViewController {
 
             let rawPercent = amount.dividing(by: total).multiplying(by: 100)
             let percent = Int(rawPercent.doubleValue.rounded())
-            
-            print(total)
 
             cell.configure(
                 categoryEmoji: transaction.category.emoji,
@@ -126,5 +126,12 @@ class AnalyzeTableViewController: UITableViewController {
         case 1: return "ОПЕРАЦИИ"
         default: return nil
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        guard indexPath.section == 1 else { return }
+        let tx = viewModel.transactions[indexPath.row]
+        onTransactionSelect?(tx)
     }
 }
