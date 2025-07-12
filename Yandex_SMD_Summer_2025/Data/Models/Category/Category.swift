@@ -14,7 +14,7 @@ enum Direction: String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
-struct Category: Identifiable, FuzzySearchable {
+struct Category: Identifiable, Hashable, FuzzySearchable {
     let id: Int
     let name: String
     let emoji: Character

@@ -16,6 +16,10 @@ final class TransactionsListViewModel {
     
     var sumOfTransactions: Decimal = 0
     
+    var showEditScreen: Bool = false
+    var chosenTransaction: Transaction? = nil
+    var editMode: EditMode = .edit
+    
     init(direction: Direction) {
         self.direction = direction
     }

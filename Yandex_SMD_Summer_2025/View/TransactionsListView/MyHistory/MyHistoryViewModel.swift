@@ -29,6 +29,9 @@ final class MyHistoryViewModel {
     
     var endOfPeriod: Date = Date()
     
+    var showEditScreen: Bool = false
+    var chosenTransaction: Transaction? = nil
+    
     init(direction: Direction) {
         self.direction = direction
         Task {

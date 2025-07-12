@@ -28,6 +28,21 @@ struct MyHistoryView: View {
             
             transactionsList
         }
+        .fullScreenCover(
+            isPresented: $viewModel.showEditScreen,
+            onDismiss: {
+                Task {
+                    await viewModel.fetchTransactions()
+                }
+            },
+            content: {
+                EditCreateView(
+                    direction: viewModel.direction,
+                    mode: .edit,
+                    transaction: viewModel.chosenTransaction
+                )
+            }
+        )
         .navigationTitle("Моя история")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -128,33 +143,39 @@ struct MyHistoryView: View {
     var transactionsList: some View {
         Section("Операции") {
             ForEach(viewModel.transactions) { transaction in
-                HStack {
-                    ZStack {
-                        Circle()
-                            .frame(width: MyHistoryMetrics.circleForIconRadius)
-                            .foregroundStyle(Color("LightGreen"))
-                        
-                        Text("\(transaction.category.emoji)")
-                            .font(.system(size: 12))
-                    }
-                    VStack(alignment: .leading) {
-                        Text(transaction.category.name)
-                            .font(.system(size: 17))
-                        if let secondText = transaction.comment {
-                            Text(secondText)
-                                .font(.system(size: 15))
-                                .foregroundStyle(.secondary)
+                Button {
+                    viewModel.chosenTransaction = transaction
+                    viewModel.showEditScreen.toggle()
+                } label: {
+                    HStack {
+                        ZStack {
+                            Circle()
+                                .frame(width: MyHistoryMetrics.circleForIconRadius)
+                                .foregroundStyle(Color("LightGreen"))
+                            
+                            Text("\(transaction.category.emoji)")
+                                .font(.system(size: 12))
                         }
+                        VStack(alignment: .leading) {
+                            Text(transaction.category.name)
+                                .font(.system(size: 17))
+                            if let secondText = transaction.comment {
+                                Text(secondText)
+                                    .font(.system(size: 15))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        Text("\(transaction.amount) ₽")
+                            .font(.system(size: 17))
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 13))
+                            .foregroundStyle(.tertiary)
                     }
-                    
-                    Spacer()
-                    
-                    Text("\(transaction.amount) ₽")
-                        .font(.system(size: 17))
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 13))
-                        .foregroundStyle(.tertiary)
+                    .tint(.black)
                 }
             }
         }

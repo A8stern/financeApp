@@ -35,6 +35,17 @@ struct TransactionsListView: View {
             
             addButton
         }
+        .fullScreenCover(isPresented: $viewModel.showEditScreen, onDismiss: {
+            Task {
+                await viewModel.fetchTransactions()
+            }
+        }, content: {
+            if viewModel.editMode == .edit {
+                EditCreateView(direction: viewModel.direction, mode: .edit, transaction: viewModel.chosenTransaction)
+            } else {
+                EditCreateView(direction: viewModel.direction, mode: .create, transaction: nil)
+            }
+        })
         .navigationTitle(viewModel.direction == .outcome ? "Расходы" : "Доходы")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -63,56 +74,64 @@ struct TransactionsListView: View {
     var transactionsList: some View {
         Section("Операции") {
             ForEach(viewModel.transactions) { transaction in
-                HStack {
-                    ZStack {
-                        Circle()
-                            .frame(width: TransactionListMetrics.circleForIconRadius)
-                            .foregroundStyle(Color("LightGreen"))
-                        
-                        Text("\(transaction.category.emoji)")
-                            .font(.system(size: 12))
-                    }
-                    VStack(alignment: .leading) {
-                        Text(transaction.category.name)
-                            .font(.system(size: 17))
-                        if let secondText = transaction.comment {
-                            Text(secondText)
-                                .font(.system(size: 15))
-                                .foregroundStyle(.secondary)
+                Button {
+                    viewModel.editMode = .edit
+                    viewModel.showEditScreen = true
+                    viewModel.chosenTransaction = transaction
+                } label: {
+                    HStack {
+                        ZStack {
+                            Circle()
+                                .frame(width: TransactionListMetrics.circleForIconRadius)
+                                .foregroundStyle(Color("LightGreen"))
+                            
+                            Text("\(transaction.category.emoji)")
+                                .font(.system(size: 12))
                         }
+                        VStack(alignment: .leading) {
+                            Text(transaction.category.name)
+                                .font(.system(size: 17))
+                            if let secondText = transaction.comment {
+                                Text(secondText)
+                                    .font(.system(size: 15))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        Text("\(transaction.amount) ₽")
+                            .font(.system(size: 17))
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 13))
+                            .foregroundStyle(.tertiary)
                     }
-                    
-                    Spacer()
-                    
-                    Text("\(transaction.amount) ₽")
-                        .font(.system(size: 17))
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 13))
-                        .foregroundStyle(.tertiary)
-                }
-                .task {
-                    
                 }
             }
         }
     }
     
     var addButton: some View {
-        VStack {
-            Spacer()
-            HStack {
+        Button {
+            viewModel.editMode = .create
+            viewModel.showEditScreen = true
+        } label: {
+            VStack {
                 Spacer()
-                Circle()
-                    .frame(width: TransactionListMetrics.addButtonFrameWidth)
-                    .padding(.horizontal, TransactionListMetrics.addButtonHorizontalPadding)
-                    .padding(.vertical, TransactionListMetrics.addButtonVerticalPadding)
-                    .foregroundStyle(Color("AccentColor"))
-                    .overlay {
-                        Image(systemName: "plus")
-                            .foregroundStyle(Color.white)
-                            .font(.title)
-                    }
+                HStack {
+                    Spacer()
+                    Circle()
+                        .frame(width: TransactionListMetrics.addButtonFrameWidth)
+                        .padding(.horizontal, TransactionListMetrics.addButtonHorizontalPadding)
+                        .padding(.vertical, TransactionListMetrics.addButtonVerticalPadding)
+                        .foregroundStyle(Color("AccentColor"))
+                        .overlay {
+                            Image(systemName: "plus")
+                                .foregroundStyle(Color.white)
+                                .font(.title)
+                        }
+                }
             }
         }
     }
