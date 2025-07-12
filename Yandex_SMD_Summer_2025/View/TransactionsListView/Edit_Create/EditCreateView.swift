@@ -48,7 +48,7 @@ struct EditCreateView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Сохранить") {
+                    Button {
                         if viewModel.balanceText.isEmpty && viewModel.selectedCategory == nil {
                             viewModel.toggleAlert()
                         } else {
@@ -61,6 +61,8 @@ struct EditCreateView: View {
                                 }
                             }
                         }
+                    } label: {
+                        Text(viewModel.mode == .create ? "Создать" : "Сохранить")
                     }
                 }
             }
