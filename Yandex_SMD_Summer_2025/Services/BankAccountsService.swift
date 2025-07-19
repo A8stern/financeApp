@@ -9,32 +9,52 @@ import Foundation
 
 actor BankAccountsService {
     
-    private var storedAccount: BankAccount?
-    
-    init() {
-        do {
-            self.storedAccount = try BankAccount(
-                id: 1,
-                userId: 1,
-                name: "Основной счёт",
-                balance: "1000.00",
-                currency: "RUB",
-                createdAt: "2025-06-13T08:59:45.854Z",
-                updatedAt: "2025-06-13T08:59:45.854Z"
-            )
-        } catch {
-            print("Error in mock bank account service: \(error)")
-        }
-    }
-    
-    func getAccount() throws -> BankAccount {
-        guard let storedAccount else {
+    func getAccount() async throws -> BankAccount {
+        let raw: [RawBankAccount] = try await NetworkClient.shared.request(endpoint: "accounts")
+        guard let fetchedAcc = raw.first else {
             throw BankAccountsServiceError.accountNotFound
         }
-        return storedAccount
+        let account: BankAccount
+        do {
+            account = try BankAccount(
+                id: fetchedAcc.id,
+                userId: fetchedAcc.userId,
+                name: fetchedAcc.name,
+                balance: fetchedAcc.balance,
+                currency: fetchedAcc.currency,
+                createdAt: fetchedAcc.createdAt,
+                updatedAt: fetchedAcc.updatedAt
+            )
+        } catch {
+            throw BankAccountsServiceError.parsingError
+        }
+        
+        return account
     }
     
-    func updateAccount(to updated: BankAccount) throws {
-        self.storedAccount = updated
+    func updateAccount(_ updated: BankAccount) async throws -> BankAccount {
+        let requestBody = UpdateAccountRequest(
+            name: updated.name,
+            balance: updated.balance.description,
+            currency: updated.currency
+        )
+        
+        let raw: RawBankAccount = try await NetworkClient.shared.request(
+            endpoint: "accounts/\(updated.id)",
+            method: .put,
+            body: requestBody
+        )
+        
+        let newAccount = try BankAccount(
+            id: raw.id,
+            userId: raw.userId,
+            name: raw.name,
+            balance: raw.balance,
+            currency: raw.currency,
+            createdAt: raw.createdAt,
+            updatedAt: raw.updatedAt
+        )
+        
+        return newAccount
     }
 }

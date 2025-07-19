@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension BankAccount: Codable {
+extension BankAccount: Encodable {
     private enum CodingKeys: String, CodingKey {
         case id, userId, name, balance, currency, createdAt, updatedAt
     }

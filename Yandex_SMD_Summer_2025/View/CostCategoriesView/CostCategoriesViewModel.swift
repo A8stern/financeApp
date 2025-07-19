@@ -28,8 +28,20 @@ final class CostCategoriesViewModel {
             }
         }
     }
+    
+    var isLoaded: Bool = false
+    var showAlert: Bool = false
+    var localizedError: String = "Неизвестная ошибка"
 
-    func loadCategories() async throws {
-        allCategories = try await service.getCategories()
+    func loadCategories() async {
+        do {
+            isLoaded = false
+            allCategories = try await service.getCategories()
+            isLoaded = true
+        } catch {
+            localizedError = error.localizedDescription
+            showAlert = true
+            isLoaded = true
+        }
     }
 }

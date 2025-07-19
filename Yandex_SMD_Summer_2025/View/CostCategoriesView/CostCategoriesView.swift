@@ -20,21 +20,26 @@ struct CostCategoriesView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                switchDirection
-                
-                listOfCategories
+                if viewModel.isLoaded {
+                    switchDirection
+                    
+                    listOfCategories
+                } else {
+                    ProgressView()
+                }
             }
+            .alert(viewModel.localizedError, isPresented: $viewModel.showAlert, actions: {
+                Button("Закрыть") {
+                    viewModel.showAlert = false
+                }
+            })
             .background(Color(.secondarySystemBackground))
             .navigationTitle("Мои статьи")
         }
         .tint(.myPurple)
         .searchable(text: $viewModel.searchText)
         .task {
-            do {
-                try await viewModel.loadCategories()
-            } catch {
-                print("Error: \(error)")
-            }
+            await viewModel.loadCategories()
         }
     }
     

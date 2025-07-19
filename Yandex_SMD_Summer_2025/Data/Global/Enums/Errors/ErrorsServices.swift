@@ -14,6 +14,7 @@ enum TransactionServiceError: Error {
 
 enum BankAccountsServiceError: Error {
     case accountNotFound
+    case parsingError
 }
 
 enum CategoryServiceError: Error {

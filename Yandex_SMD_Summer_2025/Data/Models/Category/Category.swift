@@ -14,6 +14,13 @@ enum Direction: String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
+struct RawCategory: Decodable {
+    let id: Int
+    let name: String
+    let emoji: String
+    let isIncome: Bool
+}
+
 struct Category: Identifiable, Hashable, FuzzySearchable {
     let id: Int
     let name: String

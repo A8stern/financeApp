@@ -26,8 +26,17 @@ struct MyHistoryView: View {
         List {
             headerSection
             
-            transactionsList
+            if viewModel.gotTransactions {
+                transactionsList
+            } else {
+                ProgressView()
+            }
         }
+        .alert(viewModel.localizedError, isPresented: $viewModel.showAlert, actions: {
+            Button("Закрыть") {
+                viewModel.showAlert = false
+            }
+        })
         .fullScreenCover(
             isPresented: $viewModel.showEditScreen,
             onDismiss: {

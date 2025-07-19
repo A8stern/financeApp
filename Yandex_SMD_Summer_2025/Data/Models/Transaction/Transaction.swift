@@ -7,6 +7,36 @@
 
 import Foundation
 
+struct CreateTransactionRequest: Encodable {
+    let accountId: Int
+    let categoryId: Int
+    let amount: String
+    let transactionDate: String
+    let comment: String?
+}
+
+struct TransactionRaw: Decodable {
+    let id: Int
+    let accountId: Int
+    let categoryId: Int
+    let amount: String
+    let transactionDate: String
+    let comment: String?
+    let createdAt: String
+    let updatedAt: String
+}
+
+struct TransactionListResponse: Decodable {
+    let id: Int
+    let account: AccountForTransaction
+    let category: RawCategory
+    let amount: String
+    let transactionDate: String
+    let comment: String?
+    let createdAt: String
+    let updatedAt: String
+}
+
 struct Transaction: Identifiable {
     let id: Int
     let account: BankAccount
@@ -29,26 +59,47 @@ struct Transaction: Identifiable {
     }
     
     init(id: Int, account: BankAccount, category: Category, amount: String, transactionDate: String, comment: String?, createdAt: String, updatedAt: String) throws {
+        print(comment)
         self.id = id
         self.account = account
         self.category = category
+        
         guard let amountOfTransaction = Decimal(string: amount) else {
+            print("⚠️ Invalid amount format: \(amount)")
             throw TransactionErrors.invalidBalanceFormat
         }
         self.amount = amountOfTransaction
-        self.comment = comment
         
-        let isoFormatter = ISO8601DateFormatter()
-        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        
-        guard let transactionDateInDate = isoFormatter.date(from: transactionDate),
-              let createdDate = isoFormatter.date(from: createdAt),
-              let updatedDate = isoFormatter.date(from: updatedAt) else {
-            throw TransactionErrors.invalidDateFormat
+        if comment == "" {
+            self.comment = nil
+        } else {
+            self.comment = comment
         }
-        self.transactionDate = transactionDateInDate
-        self.createdAt = createdDate
-        self.updatedAt = updatedDate
+        
+        func parseISO(_ string: String) -> Date? {
+                    let f = ISO8601DateFormatter()
+                    f.timeZone = TimeZone(secondsFromGMT: 0)
+                    // Сначала пытаемся с дробной частью
+                    f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                    if let d = f.date(from: string) { return d }
+                    // Потом — без дробной части
+                    f.formatOptions = [.withInternetDateTime]
+                    return f.date(from: string)
+                }
+
+                guard let tDate = parseISO(transactionDate) else {
+                    throw TransactionErrors.invalidDateFormat
+                }
+                guard let cDate = parseISO(createdAt) else {
+                    throw TransactionErrors.invalidDateFormat
+                }
+                guard let uDate = parseISO(updatedAt) else {
+                    throw TransactionErrors.invalidDateFormat
+                }
+
+                self.transactionDate = tDate
+                self.createdAt = cDate
+                self.updatedAt = uDate
     }
 }
 

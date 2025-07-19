@@ -15,6 +15,10 @@ final class BankAccountViewModel {
     
     private var bankAccount: BankAccount?
     
+    var isLoaded: Bool = false
+    var showAlert: Bool = false
+    var localizedError: String = "Неизвестная ошибка"
+    
     var isEditing: Bool = false
     var showCurrencyPicker: Bool = false
     var isBalanceHidden: Bool = false
@@ -35,27 +39,11 @@ final class BankAccountViewModel {
     }
     
     var balanceText: String = "000"
-    
-    init() {
-        getAccount()
-    }
 }
 
 // MARK: PRIVATE FUNCS
 
 extension BankAccountViewModel {
-    private func getAccount() {
-        Task {
-            do {
-                let newAccount = try await service.getAccount()
-                bankAccount = newAccount
-                balanceText = "\(newAccount.balance)"
-                updateCurrency()
-            } catch {
-                print("Error: \(error)")
-            }
-        }
-    }
     
     private func updateCurrency() {
         guard let account = bankAccount else { return }
@@ -84,8 +72,13 @@ extension BankAccountViewModel {
             case .didNotLoad:
                 account.currency
             }
-            try await service.updateAccount(to: BankAccount(id: account.id, userId: account.userId, name: account.name, balance: Decimal(string: balanceText) ?? account.balance, currency: newCurrency, createdAt: account.createdAt, updatedAt: Date()))
-            
+            do {
+                bankAccount = try await service.updateAccount(BankAccount(id: account.id, userId: account.userId, name: account.name, balance: Decimal(string: balanceText) ?? account.balance, currency: newCurrency, createdAt: account.createdAt, updatedAt: Date()))
+            } catch {
+                localizedError = error.localizedDescription
+                showAlert = true
+                isLoaded = true
+            }
         }
     }
 }
@@ -93,11 +86,26 @@ extension BankAccountViewModel {
 // MARK: PUBLIC FUNCS FOR UI
 
 extension BankAccountViewModel {
+    func getAccount() async{
+        do {
+            isLoaded = false
+            let newAccount = try await service.getAccount()
+            bankAccount = newAccount
+            balanceText = "\(newAccount.balance)"
+            updateCurrency()
+            isLoaded = true
+        } catch {
+            localizedError = error.localizedDescription
+            showAlert = true
+            isLoaded = true
+        }
+    }
+    
     func toolBarButtonTapped() {
         if isEditing {
             Task {
                 try await saveAccount()
-                getAccount()
+                await getAccount()
                 withAnimation {
                     isEditing.toggle()
                 }
@@ -116,7 +124,9 @@ extension BankAccountViewModel {
     }
     
     func refreshValues() {
-        getAccount()
+        Task {
+            await getAccount()
+        }
     }
     
     func deviceShaken() {
