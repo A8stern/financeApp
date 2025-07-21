@@ -7,7 +7,30 @@
 
 import Foundation
 
-struct BankAccount {
+struct RawBankAccount: Decodable {
+    let id: Int
+    let userId: Int
+    let name: String
+    let balance: String
+    let currency: String
+    let createdAt: String
+    let updatedAt: String
+}
+
+struct AccountForTransaction: Decodable {
+    let id: Int
+    let name: String
+    let balance: String
+    let currency: String
+}
+
+struct UpdateAccountRequest: Encodable {
+    let name: String
+    let balance: String
+    let currency: String
+}
+
+struct BankAccount: Decodable {
     let id: Int
     let userId: Int
     let name: String

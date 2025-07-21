@@ -14,6 +14,10 @@ final class TransactionsListViewModel {
     
     var transactions: [Transaction] = []
     
+    var gotTransactions: Bool = false
+    var showAlert: Bool = false
+    var localizedError: String = "Неизвестная ошибка"
+    
     var sumOfTransactions: Decimal = 0
     
     var showEditScreen: Bool = false
@@ -25,14 +29,17 @@ final class TransactionsListViewModel {
     }
     
     func fetchTransactions() async {
+        gotTransactions = false
         let now = Date()
         let startOfDay = Calendar.current.startOfDay(for: now)
         let endOfDay = Calendar.current.date(byAdding: DateComponents(day: 1, second: -1), to: startOfDay)!
         do {
             transactions = try await service.getTransactionsInDirection(from: startOfDay, to: endOfDay, inDirection: direction)
             sumOfTransactions = countSumOfTransactions()
+            gotTransactions = true
         } catch {
-            fatalError("Error: \(error)") // fatal error сделан специально, чтобы отлавить ошибки на этапе разработке, в прод она не пойдет
+            localizedError = error.localizedDescription
+            showAlert = true
         }
     }
     

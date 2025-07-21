@@ -6,24 +6,14 @@
 //
 
 actor CategoriesService {
-    
-    private let mockCategories: [Category] = [
-        Category(id: 1, name: "Зарплата", emoji: "💰", isIncome: true),
-        Category(id: 2, name: "Продукты", emoji: "🛒", isIncome: false),
-        Category(id: 3, name: "Подарок", emoji: "🎁", isIncome: true),
-        Category(id: 4, name: "Транспорт", emoji: "🚗", isIncome: false),
-        Category(id: 5, name: "Фриланс", emoji: "🖥", isIncome: true),
-        Category(id: 6, name: "Развлечения", emoji: "🎮", isIncome: false)
-    ]
-    
-    func getCategories() throws -> [Category] {
-        return mockCategories
-    }
-    
-    func getCategoryById(_ id: Int) throws -> Category {
-        guard let category = mockCategories.first(where: { $0.id == id }) else {
-            throw CategoryServiceError.categoryNotFound
+    func getCategories() async throws -> [Category] {
+        do {
+            let rawCategories: [RawCategory] = try await NetworkClient.shared.request(endpoint: "categories")
+            return rawCategories.map { raw in
+                Category(id: raw.id, name: raw.name, emoji: Character(raw.emoji), isIncome: raw.isIncome)
+            }
+        } catch {
+            throw error
         }
-        return category
     }
 }

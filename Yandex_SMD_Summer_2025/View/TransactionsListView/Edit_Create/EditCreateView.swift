@@ -32,12 +32,7 @@ struct EditCreateView: View {
             }
             .scrollDismissesKeyboard(.immediately)
             .task {
-                do {
-                    try await viewModel.loadCategories()
-                    try await viewModel.loadCategories()
-                } catch {
-                    print("Error: \(error)")
-                }
+                await viewModel.loadData()
             }
             .navigationTitle(viewModel.mode == .edit ? "Редактирование" : "Создание")
             .toolbar {
@@ -66,7 +61,7 @@ struct EditCreateView: View {
                     }
                 }
             }
-            .alert("Введите все поля", isPresented: $viewModel.showAlert, actions: {
+            .alert(viewModel.localizedError, isPresented: $viewModel.showAlert, actions: {
                 Button("Закрыть", role: .cancel, action: {viewModel.toggleAlert()})
             })
             .tint(Color("MyPurple"))

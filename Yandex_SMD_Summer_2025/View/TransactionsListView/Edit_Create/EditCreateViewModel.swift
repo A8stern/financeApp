@@ -31,7 +31,9 @@ final class EditCreateViewModel {
     var account: BankAccount?
     var currencyText: String = "₽"
     
+    var isLoaded: Bool = false
     var showAlert: Bool = false
+    var localizedError: String = "Неизвестная ошибка"
     
     init(direction: Direction, editMode: EditMode, transaction: Transaction?) {
         self.direction = direction
@@ -45,9 +47,28 @@ final class EditCreateViewModel {
         }
     }
     
-    func loadCategories() async throws {
+    func loadData() async {
+        do {
+            isLoaded = false
+            try await loadCategories()
+            try await loadAccount()
+            isLoaded = true
+        } catch {
+            localizedError = error.localizedDescription
+            showAlert = true
+            isLoaded = true
+        }
+    }
+    
+    private func loadCategories() async throws {
         let categories = try await categoriesService.getCategories()
         allCategories = categories.filter({$0.isIncome == direction})
+    }
+    
+    private func loadAccount() async throws {
+        let newAccount = try await accountService.getAccount()
+        account = newAccount
+        updateCurrency()
     }
     
     func saveOperation() async throws {
@@ -56,17 +77,23 @@ final class EditCreateViewModel {
                 if let acc = account, let cat = selectedCategory, let amountOfTransaction = Decimal(string: balanceText) {
                     try await transactionService.createTransaction(Transaction(id: 10, account: acc, category: cat, amount: amountOfTransaction, transactionDate: chosenDate, comment: comment == "" ? nil : comment, createdAt: Date(), updatedAt: Date()))
                 } else {
-                    throw SaveCreateViewError.notAllFieldsFilled
+                    isLoaded = true
+                    localizedError = "Не все поля заполнены"
+                    showAlert = true
                 }
             } else {
                 if let trans = transaction, let cat = selectedCategory, let amountOfTransaction = Decimal(string: balanceText) {
                     try await transactionService.updateTransaction(Transaction(id: trans.id, account: trans.account, category: cat, amount: amountOfTransaction, transactionDate: chosenDate, comment: comment == "" ? nil : comment, createdAt: trans.createdAt, updatedAt: Date()))
                 } else {
-                    throw SaveCreateViewError.notAllFieldsFilled
+                    isLoaded = true
+                    localizedError = "Не все поля заполнены"
+                    showAlert = true
                 }
             }
         } catch {
-            throw error
+            isLoaded = true
+            localizedError = error.localizedDescription
+            showAlert = true
         }
     }
     
@@ -76,19 +103,9 @@ final class EditCreateViewModel {
                 try await transactionService.deleteTransaction(withId: trans.id)
             }
         } catch {
-            throw error
-        }
-    }
-    
-    private func loadAccount() {
-        Task {
-            do {
-                let newAccount = try await accountService.getAccount()
-                account = newAccount
-                updateCurrency()
-            } catch {
-                print("Error: \(error)")
-            }
+            isLoaded = true
+            localizedError = error.localizedDescription
+            showAlert = true
         }
     }
     
@@ -108,6 +125,8 @@ final class EditCreateViewModel {
     }
     
     func toggleAlert() {
+        print(balanceText)
+        print(selectedCategory ?? "Not selected")
         showAlert.toggle()
     }
 }

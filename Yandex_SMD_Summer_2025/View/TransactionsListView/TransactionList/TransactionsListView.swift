@@ -30,11 +30,20 @@ struct TransactionsListView: View {
             List {
                 sumSection
                 
-                transactionsList
+                if viewModel.gotTransactions {
+                    transactionsList
+                } else {
+                    ProgressView()
+                }
             }
             
             addButton
         }
+        .alert(viewModel.localizedError, isPresented: $viewModel.showAlert, actions: {
+            Button("Закрыть") {
+                viewModel.showAlert = false
+            }
+        })
         .fullScreenCover(isPresented: $viewModel.showEditScreen, onDismiss: {
             Task {
                 await viewModel.fetchTransactions()
@@ -90,6 +99,7 @@ struct TransactionsListView: View {
                         }
                         VStack(alignment: .leading) {
                             Text(transaction.category.name)
+                                .foregroundStyle(.black)
                                 .font(.system(size: 17))
                             if let secondText = transaction.comment {
                                 Text(secondText)
@@ -102,6 +112,7 @@ struct TransactionsListView: View {
                         
                         Text("\(transaction.amount) ₽")
                             .font(.system(size: 17))
+                            .foregroundStyle(.black)
                         
                         Image(systemName: "chevron.right")
                             .font(.system(size: 13))
@@ -113,14 +124,14 @@ struct TransactionsListView: View {
     }
     
     var addButton: some View {
-        Button {
-            viewModel.editMode = .create
-            viewModel.showEditScreen = true
-        } label: {
-            VStack {
+        VStack {
+            Spacer()
+            HStack {
                 Spacer()
-                HStack {
-                    Spacer()
+                Button {
+                    viewModel.editMode = .create
+                    viewModel.showEditScreen = true
+                } label: {
                     Circle()
                         .frame(width: TransactionListMetrics.addButtonFrameWidth)
                         .padding(.horizontal, TransactionListMetrics.addButtonHorizontalPadding)

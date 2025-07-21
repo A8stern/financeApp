@@ -14,11 +14,22 @@ struct BankAccountView: View {
     
     var body: some View {
         NavigationStack {
+            
             List {
-                balanceView
-                
-                currencyView
+                if viewModel.isLoaded {
+                    balanceView
+                    
+                    currencyView
+                } else {
+                    ProgressView()
+                }
             }
+            
+            .alert(viewModel.localizedError, isPresented: $viewModel.showAlert, actions: {
+                Button("Закрыть") {
+                    viewModel.showAlert = false
+                }
+            })
             .refreshable {
                 viewModel.refreshValues()
             }
@@ -46,6 +57,9 @@ struct BankAccountView: View {
 
                 }
             }
+        }
+        .task {
+            await viewModel.getAccount()
         }
         .tint(Color("MyPurple"))
     }

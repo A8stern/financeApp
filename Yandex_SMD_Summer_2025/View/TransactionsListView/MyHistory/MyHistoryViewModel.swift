@@ -20,6 +20,8 @@ final class MyHistoryViewModel {
     private let service = TransactionsService()
     
     var transactions: [Transaction] = []
+    var gotTransactions: Bool = false
+    
     var sortOption: SortOption = .date
     var showTransactionSection: Bool = false
     
@@ -30,6 +32,8 @@ final class MyHistoryViewModel {
     var endOfPeriod: Date = Date()
     
     var showEditScreen: Bool = false
+    var showAlert: Bool = false
+    var localizedError: String = "Неизвестная ошибка"
     var chosenTransaction: Transaction? = nil
     
     init(direction: Direction) {
@@ -44,8 +48,10 @@ final class MyHistoryViewModel {
             let newTransactions = try await service.getTransactionsInDirection(from: startOfPeriod, to: endOfPeriod, inDirection: direction)
             sumOfTransactions = countSumOfTransactions(newTransactions)
             sortTransactions(newTransactions)
+            gotTransactions = true
         } catch {
-            fatalError("Error: \(error)") // fatal error сделан специально, чтобы отлавить ошибки на этапе разработке, в прод она не пойдет
+            localizedError = error.localizedDescription
+            showAlert = true
         }
     }
     
