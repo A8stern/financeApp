@@ -25,22 +25,9 @@
 		DD4F446D2DFCEAFE004A7F6D /* Yandex_SMD_2025Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Yandex_SMD_2025Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		DD9774FB2E3440B4009C0B4B /* Exceptions for "Yandex_SMD_Summer_2025" folder in "Yandex_SMD_Summer_2025" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				YandexSplash,
-			);
-			target = DD4F442C2DFCE7B3004A7F6D /* Yandex_SMD_Summer_2025 */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DD4F442F2DFCE7B3004A7F6D /* Yandex_SMD_Summer_2025 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				DD9774FB2E3440B4009C0B4B /* Exceptions for "Yandex_SMD_Summer_2025" folder in "Yandex_SMD_Summer_2025" target */,
-			);
 			path = Yandex_SMD_Summer_2025;
 			sourceTree = "<group>";
 		};

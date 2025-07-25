@@ -1,5 +1,5 @@
 {
-  "originHash" : "e0f967f3c3320999b774a74187aa478ef90e440b02cca7649ceab7d7c548b7a5",
+  "originHash" : "e8450bd799b72594de6197a889342443b080185314c6ecc4d5436d3499a0842b",
   "pins" : [
     {
       "identity" : "lottie-ios",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "a004050748dc197c56256a14dca49a035d74726c",
         "version" : "4.5.2"
+      }
+    },
+    {
+      "identity" : "yandexsplash",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/A8stern/YandexSplash",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3823bfb21a65aa0ad26d58c550e8af57c6134aa3"
       }
     }
   ],
