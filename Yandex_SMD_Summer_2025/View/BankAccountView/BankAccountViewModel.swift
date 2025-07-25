@@ -9,21 +9,20 @@ import SwiftUI
 
 // MARK: VARS
 
-@Observable
-final class BankAccountViewModel {
-    private let service = BankAccountsService()
+final class BankAccountViewModel: ObservableObject {
+    private let service: BankAccountsService
     
     private var bankAccount: BankAccount?
     
-    var isLoaded: Bool = false
-    var showAlert: Bool = false
-    var localizedError: String = "Неизвестная ошибка"
+    @Published var isLoaded: Bool = false
+    @Published var showAlert: Bool = false
+    @Published var localizedError: String = "Неизвестная ошибка"
     
-    var isEditing: Bool = false
-    var showCurrencyPicker: Bool = false
-    var isBalanceHidden: Bool = false
+    @Published var isEditing: Bool = false
+    @Published var showCurrencyPicker: Bool = false
+    @Published var isBalanceHidden: Bool = false
     
-    var selectedCurrency: CurrencyInApp = .didNotLoad
+    @Published var selectedCurrency: CurrencyInApp = .didNotLoad
     
     var currencyText: String {
         switch selectedCurrency {
@@ -38,7 +37,11 @@ final class BankAccountViewModel {
         }
     }
     
-    var balanceText: String = "000"
+    @Published var balanceText: String = "000"
+    
+    init(service: BankAccountsService) {
+        self.service = service
+    }
 }
 
 // MARK: PRIVATE FUNCS

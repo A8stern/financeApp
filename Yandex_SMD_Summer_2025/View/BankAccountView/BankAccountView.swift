@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct BankAccountView: View {
+    @StateObject private var viewModel: BankAccountViewModel
     
-    @State
-    var viewModel = BankAccountViewModel()
+    init(service: BankAccountsService) {
+        _viewModel = StateObject(
+            wrappedValue: BankAccountViewModel(service: service)
+        )
+    }
     
     var body: some View {
         NavigationStack {
@@ -132,6 +136,6 @@ struct BankAccountView: View {
     }
 }
 
-#Preview {
-    BankAccountView()
-}
+//#Preview {
+//    BankAccountView()
+//}

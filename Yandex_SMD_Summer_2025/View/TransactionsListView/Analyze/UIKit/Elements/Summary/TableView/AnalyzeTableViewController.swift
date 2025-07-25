@@ -13,8 +13,8 @@ class AnalyzeTableViewController: UITableViewController {
     
     var onTransactionSelect: ((Transaction) -> Void)?
     
-    init(direction: Direction) {
-        self.viewModel = AnalyzeViewModel(direction: direction)
+    init(direction: Direction, service: TransactionsService) {
+        self.viewModel = AnalyzeViewModel(direction: direction, service: service)
         super.init(nibName: nil, bundle: nil)
         self.viewModel.view = self
     }

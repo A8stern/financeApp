@@ -12,7 +12,7 @@ final class AnalyzeViewModel {
     weak var view: AnalyzeTableViewController?
     
     let direction: Direction
-    private let service = TransactionsService()
+    private let service: TransactionsService
     
     var transactions: [Transaction] = []
     var sortOption: SortOption = .date
@@ -24,9 +24,9 @@ final class AnalyzeViewModel {
     
     var endOfPeriod: Date = Date()
     
-    init(direction: Direction) {
+    init(direction: Direction, service: TransactionsService) {
         self.direction = direction
-        
+        self.service = service
         Task {
             await fetchTransactions()
         }

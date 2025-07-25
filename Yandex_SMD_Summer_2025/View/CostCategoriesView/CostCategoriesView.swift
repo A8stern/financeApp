@@ -9,61 +9,57 @@ import SwiftUI
 
 struct CostCategoriesView: View {
     
-    private enum CostCategoriesMetrics {
-        static let circleForIconRadius: CGFloat = 22
-        static let paddingHorizontalForPicker: CGFloat = 21
+    @StateObject private var viewModel: CostCategoriesViewModel
+
+    init(service: CategoriesService) {
+        _viewModel = StateObject(
+            wrappedValue: CostCategoriesViewModel(service: service)
+        )
     }
-    
-    @State
-    var viewModel = CostCategoriesViewModel()
-    
+
     var body: some View {
         NavigationStack {
             VStack {
                 if viewModel.isLoaded {
-                    switchDirection
-                    
-                    listOfCategories
+                    directionPicker
+                    categoryList
                 } else {
                     ProgressView()
                 }
             }
-            .alert(viewModel.localizedError, isPresented: $viewModel.showAlert, actions: {
-                Button("Закрыть") {
-                    viewModel.showAlert = false
-                }
-            })
-            .background(Color(.secondarySystemBackground))
+            .searchable(text: $viewModel.searchText)
+            .alert(viewModel.localizedError, isPresented: $viewModel.showAlert) {
+                Button("Закрыть", role: .cancel) { }
+            }
             .navigationTitle("Мои статьи")
-        }
-        .tint(.myPurple)
-        .searchable(text: $viewModel.searchText)
-        .task {
-            await viewModel.loadCategories()
-        }
-    }
-    
-    var switchDirection: some View {
-        Picker("", selection: $viewModel.direction) {
-            ForEach(Direction.allCases) { option in
-                Text(option.rawValue).tag(option)
+            .background(Color(.secondarySystemBackground))
+            .task {
+                viewModel.loadCategories()
             }
         }
-        .padding(.horizontal, CostCategoriesMetrics.paddingHorizontalForPicker)
+        .tint(.myPurple)
+    }
+
+    private var directionPicker: some View {
+        Picker("", selection: $viewModel.direction) {
+            ForEach(Direction.allCases) { dir in
+                Text(dir.rawValue).tag(dir)
+            }
+        }
         .pickerStyle(.segmented)
+        .padding(.horizontal, 21)
     }
     
-    var listOfCategories: some View {
+    private var categoryList: some View {
         List {
             Section("Статьи") {
                 ForEach(viewModel.sortedCategories) { category in
                     HStack {
                         ZStack {
                             Circle()
-                                .frame(width: CostCategoriesMetrics.circleForIconRadius)
+                                .frame(width: 22)
                                 .foregroundStyle(Color("LightGreen"))
-                            
-                            Text("\(category.emoji)")
+                            Text(String(category.emoji))
                                 .font(.system(size: 12))
                         }
                         Text(category.name)
@@ -72,9 +68,12 @@ struct CostCategoriesView: View {
                 }
             }
         }
+        .listStyle(.insetGrouped)
     }
 }
 
-#Preview {
-    CostCategoriesView()
-}
+//#Preview {
+//    // Для превью просто создаём сервис-заглушку
+//    CostCategoriesView(service: .init(context: .init(for: .preview)))
+//        .environmentObject(CategoriesService(context: .init(for: .preview)))
+//}

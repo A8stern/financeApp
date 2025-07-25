@@ -7,25 +7,28 @@
 
 import SwiftUI
 
-@Observable
-final class TransactionsListViewModel {
+@MainActor
+final class TransactionsListViewModel: ObservableObject {
+    
+    var service: TransactionsService
+    
     let direction: Direction
-    private let service = TransactionsService()
     
-    var transactions: [Transaction] = []
+    @Published var transactions: [Transaction] = []
     
-    var gotTransactions: Bool = false
-    var showAlert: Bool = false
-    var localizedError: String = "Неизвестная ошибка"
+    @Published var gotTransactions: Bool = false
+    @Published var showAlert: Bool = false
+    @Published var localizedError: String = "Неизвестная ошибка"
     
-    var sumOfTransactions: Decimal = 0
+    @Published var sumOfTransactions: Decimal = 0
     
-    var showEditScreen: Bool = false
-    var chosenTransaction: Transaction? = nil
-    var editMode: EditMode = .edit
+    @Published var showEditScreen: Bool = false
+    @Published var chosenTransaction: Transaction? = nil
+    @Published var editMode: EditMode = .edit
     
-    init(direction: Direction) {
+    init(direction: Direction, service: TransactionsService) {
         self.direction = direction
+        self.service = service
     }
     
     func fetchTransactions() async {

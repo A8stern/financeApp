@@ -7,38 +7,8 @@
 
 import Foundation
 
-struct CreateTransactionRequest: Encodable {
-    let accountId: Int
-    let categoryId: Int
-    let amount: String
-    let transactionDate: String
-    let comment: String?
-}
-
-struct TransactionRaw: Decodable {
-    let id: Int
-    let accountId: Int
-    let categoryId: Int
-    let amount: String
-    let transactionDate: String
-    let comment: String?
-    let createdAt: String
-    let updatedAt: String
-}
-
-struct TransactionListResponse: Decodable {
-    let id: Int
-    let account: AccountForTransaction
-    let category: RawCategory
-    let amount: String
-    let transactionDate: String
-    let comment: String?
-    let createdAt: String
-    let updatedAt: String
-}
-
 struct Transaction: Identifiable {
-    let id: Int
+    var id: Int
     let account: BankAccount
     let category: Category
     let amount: Decimal
@@ -59,13 +29,11 @@ struct Transaction: Identifiable {
     }
     
     init(id: Int, account: BankAccount, category: Category, amount: String, transactionDate: String, comment: String?, createdAt: String, updatedAt: String) throws {
-        print(comment)
         self.id = id
         self.account = account
         self.category = category
         
         guard let amountOfTransaction = Decimal(string: amount) else {
-            print("⚠️ Invalid amount format: \(amount)")
             throw TransactionErrors.invalidBalanceFormat
         }
         self.amount = amountOfTransaction
@@ -77,29 +45,38 @@ struct Transaction: Identifiable {
         }
         
         func parseISO(_ string: String) -> Date? {
-                    let f = ISO8601DateFormatter()
-                    f.timeZone = TimeZone(secondsFromGMT: 0)
-                    // Сначала пытаемся с дробной частью
-                    f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-                    if let d = f.date(from: string) { return d }
-                    // Потом — без дробной части
-                    f.formatOptions = [.withInternetDateTime]
-                    return f.date(from: string)
-                }
-
-                guard let tDate = parseISO(transactionDate) else {
-                    throw TransactionErrors.invalidDateFormat
-                }
-                guard let cDate = parseISO(createdAt) else {
-                    throw TransactionErrors.invalidDateFormat
-                }
-                guard let uDate = parseISO(updatedAt) else {
-                    throw TransactionErrors.invalidDateFormat
-                }
-
-                self.transactionDate = tDate
-                self.createdAt = cDate
-                self.updatedAt = uDate
+            let f = ISO8601DateFormatter()
+            f.timeZone = TimeZone(secondsFromGMT: 0)
+            f.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            if let d = f.date(from: string) { return d }
+            f.formatOptions = [.withInternetDateTime]
+            return f.date(from: string)
+        }
+        
+        guard let tDate = parseISO(transactionDate) else {
+            throw TransactionErrors.invalidDateFormat
+        }
+        guard let cDate = parseISO(createdAt) else {
+            throw TransactionErrors.invalidDateFormat
+        }
+        guard let uDate = parseISO(updatedAt) else {
+            throw TransactionErrors.invalidDateFormat
+        }
+        
+        self.transactionDate = tDate
+        self.createdAt = cDate
+        self.updatedAt = uDate
+    }
+    
+    init(transactionEntity: TransactionEntity) {
+        self.id = transactionEntity.id
+        self.account = BankAccount(id: transactionEntity.accId, userId: transactionEntity.accUserId, name: transactionEntity.accName, balance: transactionEntity.accBalance, currency: transactionEntity.accCurrency, createdAt: transactionEntity.accCreatedAt, updatedAt: transactionEntity.accUpdatedAt)
+        self.category = Category(id: transactionEntity.catId, name: transactionEntity.catName, emoji: Character(transactionEntity.catEmoji), isIncome: transactionEntity.catIsIncome)
+        self.amount = transactionEntity.amount
+        self.transactionDate = transactionEntity.transactionDate
+        self.comment = transactionEntity.comment
+        self.createdAt = transactionEntity.createdAt
+        self.updatedAt = transactionEntity.updatedAt
     }
 }
 

@@ -6,6 +6,39 @@
 //
 
 import Foundation
+import SwiftData
+
+@Model
+final class BankAccountEntity: Identifiable {
+    @Attribute(.unique)
+    var id: Int
+    var userId: Int
+    var name: String
+    var balance: Decimal
+    var currency: String
+    var createdAt: Date
+    var updatedAt: Date
+    
+    init(id: Int, userId: Int, name: String, balance: Decimal, currency: String, createdAt: Date, updatedAt: Date) {
+        self.id = id
+        self.userId = userId
+        self.name = name
+        self.balance = balance
+        self.currency = currency
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
+    
+    init(bankAccount: BankAccount) {
+        self.id = bankAccount.id
+        self.userId = bankAccount.userId
+        self.name = bankAccount.name
+        self.balance = bankAccount.balance
+        self.currency = bankAccount.currency
+        self.createdAt = bankAccount.createdAt
+        self.updatedAt = bankAccount.updatedAt
+    }
+}
 
 struct RawBankAccount: Decodable {
     let id: Int
@@ -71,5 +104,35 @@ struct BankAccount: Decodable {
 
         self.createdAt = createdDate
         self.updatedAt = updatedDate
+    }
+    
+    init(bankAccount: BankAccountEntity) {
+        self.id = bankAccount.id
+        self.userId = bankAccount.userId
+        self.name = bankAccount.name
+        self.balance = bankAccount.balance
+        self.currency = bankAccount.currency
+        self.createdAt = bankAccount.createdAt
+        self.updatedAt = bankAccount.updatedAt
+    }
+    
+    init(fromBackUp: BackupAccount) {
+        self.id = fromBackUp.accId
+        self.userId = fromBackUp.userId
+        self.name = fromBackUp.name
+        self.balance = fromBackUp.balance
+        self.currency = fromBackUp.currency
+        self.createdAt = fromBackUp.createdAt
+        self.updatedAt = fromBackUp.updatedAt
+    }
+    
+    init(account: BankAccount, change: Decimal) {
+        self.id = account.id
+        self.userId = account.userId
+        self.name = account.name
+        self.balance = account.balance + change
+        self.currency = account.currency
+        self.createdAt = account.createdAt
+        self.updatedAt = account.updatedAt
     }
 }

@@ -7,12 +7,14 @@
 
 import SwiftUI
 
-@Observable
-final class CostCategoriesViewModel {
-    private let service = CategoriesService()
+final class CostCategoriesViewModel: ObservableObject {
+    private let service: CategoriesService
 
-    var searchText: String = ""
-    var direction: Direction = .outcome
+    @Published var searchText: String = ""
+    @Published var direction: Direction = .outcome
+    @Published var isLoaded: Bool = false
+    @Published var showAlert: Bool = false
+    @Published var localizedError: String = "Неизвестная ошибка"
 
     private var allCategories: [Category] = []
     private var filteredCategories: [Category] {
@@ -29,14 +31,19 @@ final class CostCategoriesViewModel {
         }
     }
     
-    var isLoaded: Bool = false
-    var showAlert: Bool = false
-    var localizedError: String = "Неизвестная ошибка"
-
-    func loadCategories() async {
+    init(service: CategoriesService) {
+        self.service = service
+    }
+    
+    func loadCategories() {
+        Task { await loadCategoriesAsync() }
+    }
+    
+    private func loadCategoriesAsync() async {
         do {
             isLoaded = false
-            allCategories = try await service.getCategories()
+            let cats = try await service.getCategories()
+            allCategories = cats
             isLoaded = true
         } catch {
             localizedError = error.localizedDescription

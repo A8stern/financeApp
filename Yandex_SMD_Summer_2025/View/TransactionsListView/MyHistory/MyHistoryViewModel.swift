@@ -13,31 +13,33 @@ enum SortOption: String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
-@Observable
-final class MyHistoryViewModel {
+final class MyHistoryViewModel: ObservableObject {
+    
+    var service: TransactionsService
     
     let direction: Direction
-    private let service = TransactionsService()
     
-    var transactions: [Transaction] = []
-    var gotTransactions: Bool = false
+    @Published var transactions: [Transaction] = []
+    @Published var gotTransactions: Bool = false
     
-    var sortOption: SortOption = .date
-    var showTransactionSection: Bool = false
+    @Published var sortOption: SortOption = .date
+    @Published var showTransactionSection: Bool = false
     
-    var sumOfTransactions: Decimal = 0
+    @Published var sumOfTransactions: Decimal = 0
     
-    var startOfPeriod: Date = Calendar.current.date(byAdding: .month, value: -1, to: Date())!
+    @Published var startOfPeriod: Date = Calendar.current.date(byAdding: .month, value: -1, to: Date())!
     
-    var endOfPeriod: Date = Date()
+    @Published var endOfPeriod: Date = Date()
     
-    var showEditScreen: Bool = false
-    var showAlert: Bool = false
-    var localizedError: String = "Неизвестная ошибка"
-    var chosenTransaction: Transaction? = nil
+    @Published var showEditScreen: Bool = false
+    @Published var showAlert: Bool = false
+    @Published var localizedError: String = "Неизвестная ошибка"
+    @Published var chosenTransaction: Transaction? = nil
     
-    init(direction: Direction) {
+    init(direction: Direction, service: TransactionsService) {
         self.direction = direction
+        self.service = service
+        
         Task {
             await fetchTransactions()
         }
