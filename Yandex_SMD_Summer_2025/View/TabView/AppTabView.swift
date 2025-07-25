@@ -8,42 +8,47 @@
 import SwiftUI
 
 struct AppTabView: View {
+    @EnvironmentObject var categoriesService: CategoriesService
+    @EnvironmentObject var bankAccountService: BankAccountsService
+    @EnvironmentObject var transactionService: TransactionsService
     
     @State
     var selection = 0
     
     var body: some View {
         TabView(selection: $selection) {
-            TransactionListRouterView {
-                TransactionsListView(direction: .outcome)
+            TransactionListRouterView(tService: transactionService, cService: categoriesService, bService: bankAccountService, content: {
+                TransactionsListView(direction: .outcome, tService: transactionService, bService: bankAccountService, cService: categoriesService)
+            })
+            .tabItem {
+                Image(selection == 0 ? "TransactionOutcomeIconSelected" : "TransactionOutcomeIcon")
+                Text("Расходы")
             }
-                .tabItem {
-                    Image(selection == 0 ? "TransactionOutcomeIconSelected" : "TransactionOutcomeIcon")
-                    Text("Расходы")
-                }
-                .tag(0)
+            .tag(0)
             
-            TransactionListRouterView {
-                TransactionsListView(direction: .income)
+            TransactionListRouterView(tService: transactionService, cService: categoriesService, bService: bankAccountService, content: {
+                TransactionsListView(direction: .income, tService: transactionService, bService: bankAccountService, cService: categoriesService)
+            })
+            .tabItem {
+                Image(selection == 1 ? "TransactionIncomeIconSelected" : "TransactionIncomeIcon")
+                Text("Доходы")
             }
-                .tabItem {
-                    Image(selection == 1 ? "TransactionIncomeIconSelected" : "TransactionIncomeIcon")
-                    Text("Доходы")
-                }
-                .tag(1)
+            .tag(1)
             
-            BankAccountView()
+            BankAccountView(service: bankAccountService)
                 .tabItem {
                     Image(selection == 2 ? "AccountIconSelected" : "AccountIcon")
                     Text("Счет")
                 }
+                .environmentObject(bankAccountService)
                 .tag(2)
             
-            CostCategoriesView()
+            CostCategoriesView(service: categoriesService)
                 .tabItem {
                     Image(selection == 3 ? "CostCategoriesIconSelected" : "CostCategoriesIcon")
                     Text("Статьи")
                 }
+                .environmentObject(categoriesService)
                 .tag(3)
             
             SettingsView()

@@ -9,8 +9,7 @@ import SwiftUI
 
 struct TransactionsListView: View {
     
-    @State
-    var viewModel: TransactionsListViewModel
+    @StateObject var viewModel: TransactionsListViewModel
     
     @EnvironmentObject var router: TransactionListRouter
     
@@ -21,8 +20,17 @@ struct TransactionsListView: View {
         static let addButtonVerticalPadding: CGFloat  = 27
     }
     
-    init(direction: Direction) {
-        self.viewModel = TransactionsListViewModel(direction: direction)
+    let transactionService: TransactionsService
+    let bankAccountService: BankAccountsService
+    let categoriesService: CategoriesService
+    
+    init(direction: Direction, tService: TransactionsService, bService: BankAccountsService, cService: CategoriesService) {
+        _viewModel = StateObject(
+            wrappedValue: TransactionsListViewModel(direction: direction, service: tService)
+        )
+        self.transactionService = tService
+        self.bankAccountService = bService
+        self.categoriesService = cService
     }
     
     var body: some View {
@@ -50,9 +58,23 @@ struct TransactionsListView: View {
             }
         }, content: {
             if viewModel.editMode == .edit {
-                EditCreateView(direction: viewModel.direction, mode: .edit, transaction: viewModel.chosenTransaction)
+                EditCreateView(
+                    direction: viewModel.direction,
+                    mode: .edit,
+                    transaction: viewModel.chosenTransaction,
+                    transactionService: transactionService,
+                    categoriesService: categoriesService,
+                    bankAccountService: bankAccountService
+                )
             } else {
-                EditCreateView(direction: viewModel.direction, mode: .create, transaction: nil)
+                EditCreateView(
+                    direction: viewModel.direction,
+                    mode: .create,
+                    transaction: nil,
+                    transactionService: transactionService,
+                    categoriesService: categoriesService,
+                    bankAccountService: bankAccountService
+                )
             }
         })
         .navigationTitle(viewModel.direction == .outcome ? "Расходы" : "Доходы")
@@ -148,6 +170,6 @@ struct TransactionsListView: View {
     }
 }
 
-#Preview {
-    TransactionsListView(direction: .income)
-}
+//#Preview {
+//    TransactionsListView(direction: .income)
+//}

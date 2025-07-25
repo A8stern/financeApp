@@ -9,16 +9,24 @@ import SwiftUI
 
 struct AnalyzeViewControllerRepresentable: UIViewControllerRepresentable {
     @Binding var chosenTransaction: Transaction?
+    @EnvironmentObject var router: TransactionListRouter
+    
+    var transactionService: TransactionsService
+    
     let direction: Direction
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-
+    
     func makeUIViewController(context: Context) -> AnalyzeViewController {
-        let vc = AnalyzeViewController(direction: direction)
+        let vc = AnalyzeViewController(direction: direction, service: transactionService)
         vc.onTransactionSelect = { tx in
-            context.coordinator.parent.chosenTransaction = tx
+            router.showEdit(
+                transaction: tx,
+                direction: direction,
+                editMode: .edit
+            )
         }
         return vc
     }

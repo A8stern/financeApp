@@ -9,17 +9,27 @@ import SwiftUI
 
 struct MyHistoryView: View {
     
-    @State
+    @StateObject
     var viewModel: MyHistoryViewModel
     
+    @EnvironmentObject var service: TransactionsService
     @EnvironmentObject var router: TransactionListRouter
+    
+    let transactionService: TransactionsService
+    let bankAccountService: BankAccountsService
+    let categoriesService: CategoriesService
     
     private enum MyHistoryMetrics {
         static let circleForIconRadius: CGFloat = 22
     }
     
-    init(direction: Direction) {
-        self.viewModel = MyHistoryViewModel(direction: direction)
+    init(direction: Direction, tService: TransactionsService, bService: BankAccountsService, cService: CategoriesService) {
+        _viewModel = StateObject(
+            wrappedValue: MyHistoryViewModel(direction: direction, service: tService)
+        )
+        self.transactionService = tService
+        self.bankAccountService = bService
+        self.categoriesService = cService
     }
     
     var body: some View {
@@ -48,7 +58,10 @@ struct MyHistoryView: View {
                 EditCreateView(
                     direction: viewModel.direction,
                     mode: .edit,
-                    transaction: viewModel.chosenTransaction
+                    transaction: viewModel.chosenTransaction,
+                    transactionService: transactionService,
+                    categoriesService: categoriesService,
+                    bankAccountService: bankAccountService
                 )
             }
         )
@@ -58,7 +71,7 @@ struct MyHistoryView: View {
                 Button {
                     router.navigateTo(.analyze(viewModel.direction))
                 } label: {
-                    Image(systemName: "document")
+                    Image("DocumentIcon")
                 }
             }
         }
@@ -193,6 +206,6 @@ struct MyHistoryView: View {
 
 
 
-#Preview {
-    MyHistoryView(direction: .income)
-}
+//#Preview {
+//    MyHistoryView(direction: .income)
+//}

@@ -9,13 +9,17 @@ import SwiftUI
 
 struct EditCreateView: View {
     
+    @EnvironmentObject var transactionService: TransactionsService
+    @EnvironmentObject var categoriesService: CategoriesService
+    @EnvironmentObject var bankAccountService: BankAccountsService
+    
     @Environment(\.dismiss) private var dismiss
     
-    @State
+    @StateObject
     var viewModel: EditCreateViewModel
     
-    init(direction: Direction, mode: EditMode, transaction: Transaction?) {
-        viewModel = EditCreateViewModel(direction: direction, editMode: mode, transaction: transaction)
+    init(direction: Direction, mode: EditMode, transaction: Transaction?, transactionService: TransactionsService, categoriesService: CategoriesService, bankAccountService: BankAccountsService) {
+        _viewModel = StateObject(wrappedValue: EditCreateViewModel(direction: direction, editMode: mode, transaction: transaction, transactionService: transactionService, categoriesService: categoriesService, accountService: bankAccountService))
     }
     
     var body: some View {
@@ -221,6 +225,6 @@ struct EditCreateView: View {
     }
 }
 
-#Preview {
-    EditCreateView(direction: .income, mode: .create, transaction: nil)
-}
+//#Preview {
+//    EditCreateView(direction: .income, mode: .create, transaction: nil)
+//}

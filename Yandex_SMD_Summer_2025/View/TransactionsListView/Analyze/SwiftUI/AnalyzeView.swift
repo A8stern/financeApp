@@ -11,25 +11,25 @@ struct AnalyzeView: View {
     let direction: Direction
 
     @EnvironmentObject var router: TransactionListRouter
-
-    @State private var chosenTransaction: Transaction?
+    var transactionService: TransactionsService
+    
+    @State private var chosenTransaction: Transaction? 
+    
+    init(direction: Direction, transactionService: TransactionsService) {
+        self.direction = direction
+        self.transactionService = transactionService
+    }
 
     var body: some View {
         AnalyzeViewControllerRepresentable(
-            chosenTransaction: $chosenTransaction,
+            chosenTransaction: $chosenTransaction, transactionService: transactionService,
             direction: direction
         )
+        .environmentObject(router)
         .background(Color(.systemGroupedBackground))
-        .fullScreenCover(item: $chosenTransaction) { tx in
-            EditCreateView(
-                direction: direction,
-                mode: .edit,
-                transaction: tx
-            )
-        }
     }
 }
 
-#Preview {
-    AnalyzeView(direction: .income)
-}
+//#Preview {
+//    AnalyzeView(direction: .income)
+//}

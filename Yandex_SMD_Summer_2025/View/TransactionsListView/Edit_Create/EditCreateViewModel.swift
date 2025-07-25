@@ -7,35 +7,34 @@
 
 import SwiftUI
 
-@Observable
-final class EditCreateViewModel {
+final class EditCreateViewModel: ObservableObject {
+    
+    var transactionService: TransactionsService
+    var categoriesService: CategoriesService
+    var accountService: BankAccountsService
     
     let direction: Direction
     let mode: EditMode
     
-    private let transactionService = TransactionsService()
-    private let categoriesService = CategoriesService()
-    private let accountService = BankAccountsService()
+    @Published var transaction: Transaction?
     
-    var transaction: Transaction?
+    @Published var allCategories: [Category] = []
+    @Published var selectedCategory: Category?
     
-    var allCategories: [Category] = []
-    var selectedCategory: Category?
+    @Published var balanceText: String = ""
     
-    var balanceText: String = ""
+    @Published var chosenDate: Date = Date()
     
-    var chosenDate: Date = Date()
+    @Published var comment: String = ""
     
-    var comment: String = ""
+    @Published var account: BankAccount?
+    @Published var currencyText: String = "₽"
     
-    var account: BankAccount?
-    var currencyText: String = "₽"
+    @Published var isLoaded: Bool = false
+    @Published var showAlert: Bool = false
+    @Published var localizedError: String = "Неизвестная ошибка"
     
-    var isLoaded: Bool = false
-    var showAlert: Bool = false
-    var localizedError: String = "Неизвестная ошибка"
-    
-    init(direction: Direction, editMode: EditMode, transaction: Transaction?) {
+    init(direction: Direction, editMode: EditMode, transaction: Transaction?, transactionService: TransactionsService, categoriesService: CategoriesService, accountService: BankAccountsService) {
         self.direction = direction
         self.mode = editMode
         if let trans = transaction {
@@ -45,6 +44,9 @@ final class EditCreateViewModel {
             self.chosenDate = trans.transactionDate
             self.comment = trans.comment ?? ""
         }
+        self.transactionService = transactionService
+        self.categoriesService = categoriesService
+        self.accountService = accountService
     }
     
     func loadData() async {
@@ -83,7 +85,8 @@ final class EditCreateViewModel {
                 }
             } else {
                 if let trans = transaction, let cat = selectedCategory, let amountOfTransaction = Decimal(string: balanceText) {
-                    try await transactionService.updateTransaction(Transaction(id: trans.id, account: trans.account, category: cat, amount: amountOfTransaction, transactionDate: chosenDate, comment: comment == "" ? nil : comment, createdAt: trans.createdAt, updatedAt: Date()))
+                    var newTransaction = Transaction(id: trans.id, account: trans.account, category: cat, amount: amountOfTransaction, transactionDate: chosenDate, comment: comment == "" ? nil : comment, createdAt: trans.createdAt, updatedAt: Date())
+                    try await transactionService.updateTransaction(oldTransaction: trans, newTransaction: newTransaction)
                 } else {
                     isLoaded = true
                     localizedError = "Не все поля заполнены"
@@ -100,7 +103,7 @@ final class EditCreateViewModel {
     func deleteOperation() async throws {
         do {
             if let trans = transaction {
-                try await transactionService.deleteTransaction(withId: trans.id)
+                try await transactionService.deleteTransaction(trans)
             }
         } catch {
             isLoaded = true
@@ -125,8 +128,6 @@ final class EditCreateViewModel {
     }
     
     func toggleAlert() {
-        print(balanceText)
-        print(selectedCategory ?? "Not selected")
         showAlert.toggle()
     }
 }

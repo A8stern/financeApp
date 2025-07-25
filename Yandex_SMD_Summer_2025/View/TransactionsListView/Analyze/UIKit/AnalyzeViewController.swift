@@ -23,8 +23,8 @@ class AnalyzeViewController: UIViewController {
         return label
     }()
 
-    init(direction: Direction) {
-        self.tableViewController = AnalyzeTableViewController(direction: direction)
+    init(direction: Direction, service: TransactionsService) {
+        self.tableViewController = AnalyzeTableViewController(direction: direction, service: service)
         super.init(nibName: nil, bundle: nil)
         tableViewController.onTransactionSelect = { [weak self] tx in
             self?.onTransactionSelect?(tx)
