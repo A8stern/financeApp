@@ -85,7 +85,7 @@ final class EditCreateViewModel: ObservableObject {
                 }
             } else {
                 if let trans = transaction, let cat = selectedCategory, let amountOfTransaction = Decimal(string: balanceText) {
-                    var newTransaction = Transaction(id: trans.id, account: trans.account, category: cat, amount: amountOfTransaction, transactionDate: chosenDate, comment: comment == "" ? nil : comment, createdAt: trans.createdAt, updatedAt: Date())
+                    let newTransaction = Transaction(id: trans.id, account: trans.account, category: cat, amount: amountOfTransaction, transactionDate: chosenDate, comment: comment == "" ? nil : comment, createdAt: trans.createdAt, updatedAt: Date())
                     try await transactionService.updateTransaction(oldTransaction: trans, newTransaction: newTransaction)
                 } else {
                     isLoaded = true
