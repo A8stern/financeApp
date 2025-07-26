@@ -7,9 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import YandexSplash
 
 @main
 struct Yandex_SMD_Summer_2025App: App {
+    @State var showSplashScreen = true
+    
     static let schema = Schema([
         CategoryEntity.self,
         BankAccountEntity.self,
@@ -49,11 +52,17 @@ struct Yandex_SMD_Summer_2025App: App {
     
     var body: some Scene {
         WindowGroup {
-            AppTabView()
-                .environmentObject(categoryService)
-                .environmentObject(bankAccountService)
-                .environmentObject(transactionService)
-                .environment(\.colorScheme, .light)
+            if showSplashScreen {
+                SplashScreenView {
+                    showSplashScreen = false
+                }
+            } else {
+                AppTabView()
+                    .environmentObject(categoryService)
+                    .environmentObject(bankAccountService)
+                    .environmentObject(transactionService)
+                    .environment(\.colorScheme, .light)
+            }
         }
     }
 }
