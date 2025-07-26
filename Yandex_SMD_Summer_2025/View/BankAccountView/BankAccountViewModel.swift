@@ -24,6 +24,9 @@ final class BankAccountViewModel: ObservableObject {
     
     @Published var selectedCurrency: CurrencyInApp = .didNotLoad
     
+    @Published var transactionsInLastTwoYears: [Transaction] = []
+    @Published var statisticPeriod: BalanceHistoryChartView.StatisticPeriod = .daily
+    
     var currencyText: String {
         switch selectedCurrency {
         case .ruble:
@@ -97,6 +100,24 @@ extension BankAccountViewModel {
             balanceText = "\(newAccount.balance)"
             updateCurrency()
             isLoaded = true
+        } catch {
+            localizedError = error.localizedDescription
+            showAlert = true
+            isLoaded = true
+        }
+    }
+    
+    func getTransactions() async {
+        do {
+            let todayDate = Date()
+            let twoYearsAgo = Calendar.current.date(byAdding: .year, value: -2, to: todayDate)!
+            guard let transactions = try await service.transactionsService?.getTransactions(from: twoYearsAgo, to: todayDate) else {
+                localizedError = "Ошибка при получении транзакций"
+                showAlert = true
+                isLoaded = true
+                return
+            }
+            transactionsInLastTwoYears = transactions
         } catch {
             localizedError = error.localizedDescription
             showAlert = true

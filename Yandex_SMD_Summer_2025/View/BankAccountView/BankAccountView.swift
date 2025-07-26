@@ -24,6 +24,8 @@ struct BankAccountView: View {
                     balanceView
                     
                     currencyView
+                    
+                    chartView
                 } else {
                     ProgressView()
                 }
@@ -64,6 +66,7 @@ struct BankAccountView: View {
         }
         .task {
             await viewModel.getAccount()
+            await viewModel.getTransactions()
         }
         .tint(Color("MyPurple"))
     }
@@ -109,6 +112,17 @@ struct BankAccountView: View {
             
             .listRowBackground(viewModel.isEditing ? .white : Color.accent)
         }
+    }
+    
+    var chartView: some View {
+        Section {
+            BalanceHistoryChartView(
+                transactions: $viewModel.transactionsInLastTwoYears,
+                period: $viewModel.statisticPeriod,
+                isEditing: $viewModel.isEditing
+            )
+        }
+        .listRowBackground(Color(.secondarySystemBackground))
     }
     
     var currencyView: some View {
