@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD09C4452E38695000F67489 /* PieChart in Frameworks */ = {isa = PBXBuildFile; productRef = DD09C4442E38695000F67489 /* PieChart */; };
 		DD9775012E344849009C0B4B /* YandexSplash in Frameworks */ = {isa = PBXBuildFile; productRef = DD9775002E344849009C0B4B /* YandexSplash */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD09C4452E38695000F67489 /* PieChart in Frameworks */,
 				DD9775012E344849009C0B4B /* YandexSplash in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -104,6 +106,7 @@
 			name = Yandex_SMD_Summer_2025;
 			packageProductDependencies = (
 				DD9775002E344849009C0B4B /* YandexSplash */,
+				DD09C4442E38695000F67489 /* PieChart */,
 			);
 			productName = Yandex_SMD_Summer_2025;
 			productReference = DD4F442D2DFCE7B3004A7F6D /* Yandex_SMD_Summer_2025.app */;
@@ -163,6 +166,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				DD9774FF2E344849009C0B4B /* XCRemoteSwiftPackageReference "YandexSplash" */,
+				DD09C4432E38695000F67489 /* XCRemoteSwiftPackageReference "PieChart" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DD4F442E2DFCE7B3004A7F6D /* Products */;
@@ -471,6 +475,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		DD09C4432E38695000F67489 /* XCRemoteSwiftPackageReference "PieChart" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/A8stern/PieChart";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		DD9774FF2E344849009C0B4B /* XCRemoteSwiftPackageReference "YandexSplash" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/A8stern/YandexSplash";
@@ -482,6 +494,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		DD09C4442E38695000F67489 /* PieChart */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DD09C4432E38695000F67489 /* XCRemoteSwiftPackageReference "PieChart" */;
+			productName = PieChart;
+		};
 		DD9775002E344849009C0B4B /* YandexSplash */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DD9774FF2E344849009C0B4B /* XCRemoteSwiftPackageReference "YandexSplash" */;

@@ -9,7 +9,7 @@ import Foundation
 
 final class AnalyzeViewModel {
     
-    weak var view: AnalyzeTableViewController?
+    weak var view: AnalyzeViewController?
     
     let direction: Direction
     private let service: TransactionsService
@@ -61,7 +61,7 @@ final class AnalyzeViewModel {
     @MainActor
     private func reloadData() {
         Task {
-            view?.tableView.reloadData()
+            view?.reload()
         }
     }
 }

@@ -1,5 +1,5 @@
 {
-  "originHash" : "e8450bd799b72594de6197a889342443b080185314c6ecc4d5436d3499a0842b",
+  "originHash" : "ba2b0f83ffe5b9bd1203e3415cda4d745e83ea8022f39a1131ed870648f17ff9",
   "pins" : [
     {
       "identity" : "lottie-ios",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "a004050748dc197c56256a14dca49a035d74726c",
         "version" : "4.5.2"
+      }
+    },
+    {
+      "identity" : "piechart",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/A8stern/PieChart",
+      "state" : {
+        "branch" : "main",
+        "revision" : "6cd25738b1ddbf7ad88e3c11af1fefb1b158e63a"
       }
     },
     {
